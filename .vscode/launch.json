@@ -1,0 +1,53 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "gdb: hive",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/hive",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        // SFML opens its window over the noVNC display started by the
+        // dev container; without DISPLAY set, sf::RenderWindow can't
+        // reach the X server. See the README for how to view it
+        // (http://localhost:6080).
+        { "name": "DISPLAY", "value": ":1" }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "make hive"
+    },
+    {
+      "name": "gdb: hive_tests",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/hive_tests",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "make hive_tests"
+    }
+  ]
+}

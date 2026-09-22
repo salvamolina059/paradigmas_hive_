@@ -1,0 +1,9 @@
+build/
+/hive
+/hive_tests
+/hive.tmp
+/hive_tests.tmp
+*.o
+*.dSYM/
+.DS_Store
+Makefile.local

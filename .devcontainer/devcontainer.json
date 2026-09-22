@@ -1,0 +1,53 @@
+{
+  // This is the file that gets copied verbatim into every activity repo's
+  // .devcontainer/. Keep it tiny and feature-free: it must only ever
+  // reference the prebuilt image below, never rebuild or install features
+  // on the student's machine.
+  //
+  // Bumping the course image? Edit the tag here, then run
+  // scripts/sync-devcontainer.sh against every activity repo.
+  "name": "Paradigmas",
+  "image": "ghcr.io/paradigmas-udesa/paradigmas:2026a",
+
+  // Shared across every activity container of every student -- this is what
+  // makes "one container per activity repo" cheap instead of N cold caches.
+  "mounts": [
+    "source=paradigmas-ccache,target=/home/vscode/.ccache,type=volume"
+  ],
+
+  // Required for gdb: setting breakpoints needs ptrace, which Docker's
+  // default seccomp profile blocks. Without this, gdb runs but breakpoints
+  // silently never hit.
+  "runArgs": ["--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined"],
+
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": {
+      "label": "GUI (noVNC)",
+      "onAutoForward": "silent"
+    }
+  },
+  // 1) Named volumes can get created root-owned (e.g. if mounted against
+  //    an older image, or a fresh Docker install) -- vscode then can't
+  //    write to the shared ccache dir at all ("ccache: error: Permission
+  //    denied" on every compile). Re-chown on every start so this
+  //    self-heals regardless of how the volume got created.
+  // 2) Starts the VNC/noVNC server baked into the image. Runs on every
+  //    container *start* (not just create), so it survives restarts.
+  "postStartCommand": "sudo chown -R vscode:vscode /home/vscode/.ccache && /usr/local/share/desktop-init.sh",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.makefile-tools"
+      ],
+      "settings": {
+        "C_Cpp.default.cppStandard": "c++17",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  "remoteUser": "vscode"
+}
