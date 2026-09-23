@@ -1,23 +1,25 @@
 #include "hive/movement/BeetleMovement.h"
 
 #include "hive/Board.h"
-
-// TODO (parte 2): implementen el movimiento del escarabajo (Beetle).
-//
-// La regla está en include/hive/movement/BeetleMovement.h; la consigna la
-// explica con más detalle. La reina de la parte 1b es la misma forma con una
-// regla más simple, y AntMovement.cpp está resuelta. Los tests están en
-// tests/beetle_movement_test.cpp.
-//
-// Métodos de Board que van a necesitar: neighbors() (en Hex.h), isOccupied(),
-// stackHeight(), canSlide() y wouldStayAttached().
+#include "hive/Hex.h"
 
 std::vector<Hex> BeetleMovement::moves(const Board &board, const Hex &from,
                                         const Piece &self) const
 {
-    // TODO: devolver los destinos legales del escarabajo desde `from`.
-    (void)board;
-    (void)from;
-    (void)self;
-    return {};
+    std::vector<Hex> destinos;
+
+    for (const Hex &vecino : neighbors(from)) {
+        // se mueve por arriba si ya esta sobre una pila o si se sube a una pieza
+        bool porArriba = board.stackHeight(from) > 1 || board.isOccupied(vecino);
+
+        if (porArriba) {
+            // por arriba no hay hueco que lo trabe y siempre toca la colmena
+            destinos.push_back(vecino);
+        } else if (board.canSlide(from, vecino) && board.wouldStayAttached(vecino, self)) {
+            // piso a piso: mismas reglas que la reina
+            destinos.push_back(vecino);
+        }
+    }
+
+    return destinos;
 }
