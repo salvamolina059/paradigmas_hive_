@@ -1,22 +1,31 @@
 #include "hive/movement/GrasshopperMovement.h"
 
 #include "hive/Board.h"
-
-// TODO (parte 2): implementen el movimiento del saltamontes (Grasshopper).
-//
-// La regla está en include/hive/movement/GrasshopperMovement.h, que además
-// explica qué reglas generales NO se le aplican y por qué. Los tests están en
-// tests/grasshopper_movement_test.cpp.
-//
-// hexDirections() (en Hex.h) da las 6 direcciones: saltar en línea recta es
-// avanzar repetidamente sumando siempre la misma dirección.
+#include "hive/Hex.h"
 
 std::vector<Hex> GrasshopperMovement::moves(const Board &board, const Hex &from,
                                              const Piece &self) const
 {
-    // TODO: devolver los destinos legales del saltamontes desde `from`.
-    (void)board;
-    (void)from;
-    (void)self;
-    return {};
+    (void)self;  // el saltamontes no lo necesita
+
+    std::vector<Hex> destinos;
+
+    for (const Hex &dir : hexDirections()) {
+        Hex actual{from.q + dir.q, from.r + dir.r};
+
+        // tiene que saltar por encima de al menos una pieza
+        if (!board.isOccupied(actual)) {
+            continue;
+        }
+
+        // avanza en linea recta hasta el primer casillero vacio
+        while (board.isOccupied(actual)) {
+            actual.q += dir.q;
+            actual.r += dir.r;
+        }
+
+        destinos.push_back(actual);
+    }
+
+    return destinos;
 }
