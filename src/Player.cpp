@@ -1,54 +1,61 @@
 #include "hive/Player.h"
 
-// ============================================================================
-// TODO (parte 1a): implementen cada método según el contrato documentado en
-// include/hive/Player.h.
-//
-// El header declara solo la parte pública: lo que el resto del programa (y los
-// tests) puede usar. Tienen que decidir el ESTADO: qué datos necesita guardar
-// un jugador para poder responder a estos métodos, y por qué conviene que sean
-// privados. Ese estado va en la sección `private:` del header.
-// ============================================================================
-
 Player::Player(Color color)
+    : color_(color),
+      mano_{
+          {PieceType::Queen, 1},
+          {PieceType::Spider, 2},
+          {PieceType::Beetle, 2},
+          {PieceType::Grasshopper, 3},
+          {PieceType::Ant, 3},
+          {PieceType::Mosquito, 1},
+          {PieceType::Ladybug, 1},
+          {PieceType::Pillbug, 1},
+      }
 {
-    // TODO: dejar al jugador en su estado inicial: su color, y la mano
-    // completa de piezas sin colocar. Las cantidades de cada tipo están
-    // documentadas en Player.h.
-    (void)color;
 }
 
 Color Player::color() const
 {
-    // TODO: devolver el color del jugador.
-    return Color::White;
+    return color_;
 }
 
-int Player::remaining(PieceType type) const
+int Player::remaining(PieceType tipo) const
 {
-    // TODO: devolver cuántas piezas de ese tipo quedan sin colocar.
-    (void)type;
-    return -1;
+    return mano_.at(tipo);
 }
 
 std::vector<PieceType> Player::availableTypes() const
 {
-    // TODO: devolver los tipos que todavía se pueden colocar.
-    return {};
+    // lista fija para que el menu salga siempre en el mismo orden
+    // (el unordered_map no garantiza ningun orden)
+    const PieceType todos[] = {
+        PieceType::Queen,
+        PieceType::Spider,
+        PieceType::Beetle,
+        PieceType::Grasshopper,
+        PieceType::Ant,
+        PieceType::Mosquito,
+        PieceType::Ladybug,
+        PieceType::Pillbug,
+    };
+
+    std::vector<PieceType> disponibles;
+    for (PieceType tipo : todos) {
+        if (remaining(tipo) > 0) {
+            disponibles.push_back(tipo);
+        }
+    }
+    return disponibles;
 }
 
-void Player::place(PieceType type)
+void Player::place(PieceType tipo)
 {
-    // TODO: registrar que se colocó una pieza de ese tipo.
-    (void)type;
+    mano_[tipo] -= 1;
 }
 
 bool Player::hasPlacedQueen() const
 {
-    // TODO: devolver si la reina ya fue colocada.
-    //
-    // Para pensar: ¿conviene guardar esto en un dato aparte, o se puede
-    // deducir del estado que ya existe? ¿Qué pasa si alguien agrega otra
-    // forma de sacar piezas de la mano y se olvida de actualizar el dato?
-    return false;
+    // no guardo un bool aparte: si no quedan reinas en la mano, ya la puso
+    return remaining(PieceType::Queen) == 0;
 }

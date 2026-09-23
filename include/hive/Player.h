@@ -49,6 +49,6 @@ public:
     bool hasPlacedQueen() const;
 
 private:
-    // El estado va acá: qué datos necesita guardar un jugador para poder
-    // responder a los métodos de arriba, y por qué conviene que sean privados.
+    Color color_;
+    std::unordered_map<PieceType, int> mano_;  // cuantas piezas quedan de cada tipo
 };
