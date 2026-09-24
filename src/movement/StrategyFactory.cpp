@@ -7,6 +7,7 @@
 #include "hive/movement/BeetleMovement.h"
 #include "hive/movement/GrasshopperMovement.h"
 #include "hive/movement/AntMovement.h"
+#include "hive/movement/LadybugMovement.h"
 
 std::unique_ptr<MovementStrategy> createMovementStrategy(PieceType type)
 {
@@ -29,7 +30,10 @@ std::unique_ptr<MovementStrategy> createMovementStrategy(PieceType type)
         return nullptr;
     case PieceType::Ladybug:
         // todavia no existe, va en la parte 3
-        return nullptr;
+        //return nullptr;
+        //Ahora ya existe, fue dejado cómo nullptr en la parte 2
+        return std::make_unique<LadybugMovement>();
+        
     }
 
     return nullptr;

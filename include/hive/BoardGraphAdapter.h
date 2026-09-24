@@ -65,4 +65,8 @@ private:
     // El estado va acá: qué hace falta guardar en el constructor para poder
     // traducir en las dos direcciones (Hex -> nodo, nodo -> Hex) y para
     // responder las consultas de arriba sin volver a mirar el Board.
+    std::unordered_map<Hex, int> hexToNode_; //Hex -> int
+    std::vector<Hex> nodeToHex_; // int -> Hex
+    std::vector<std::vector<int>> adjacency_; // lista de adyacencia ->BFS
+    
 };
